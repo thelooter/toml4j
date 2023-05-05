@@ -70,6 +70,11 @@ tasks{
 
 signing{
     isRequired = !isFork() && isAction()
+
+    val signingKey = System.getenv("SIGNING_KEY")
+    val signingPassword = System.getenv()["SIGNING_KEY"]
+    useInMemoryPgpKeys(signingKey, signingPassword)
+
     sign(publishing.publications)
 }
 

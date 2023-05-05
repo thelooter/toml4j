@@ -11,6 +11,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
+      sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
+      SIGNING_KEY: ${{ secrets.GPG_SECRET }}
+      SIGNING_PASSWORD: ${{ secrets.GPG_PASSWORD }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -22,30 +27,5 @@ jobs:
         run: ./gradlew build -x test
       - name: Run Unit Tests
         run: ./gradlew test
-
-      - name: Store Private key
-        uses: DamianReeves/write-file-action@v1.2
-        with:
-          path: private.key
-          contents: ${{ secrets.GPG_SECRET }}
-          write-mode: overwrite
-
-      - name: Publish to Maven Central
-        env:
-          OSSRH_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          SIGN_KEY: ${{ secrets.GPG_PASSWORD }}
-        run: |
-          mkdir -p $HOME/.gnupg
-          echo use-agent >> $HOME/.gnupg/gpg.conf
-          echo pinentry-mode loopback >> $HOME/.gnupg/gpg.conf
-          echo allow-loopback-pinentry >> $HOME/.gnupg/gpg-agent.conf
-          gpg --batch --import private.key
-          gpg --batch --export-secret-keys --passphrase $SIGN_KEY "Eve Kolb <evekolb2204@gmail.com>" > private.gpg
-
-          ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository \
-            -PossrhUsername=$OSSRH_USERNAME \
-            -PossrhPassword=$OSSRH_PASSWORD \
-            -Psigning.secretKeyRingFile=private.gpg \
-            -Psigning.keyId=${{ secrets.PRIV_KEY_ID }} \
-            -Psigning.password=$SIGN_KEY
+      - name: Publish to Sonatype
+        run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
