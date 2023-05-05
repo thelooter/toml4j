@@ -68,12 +68,6 @@ tasks{
 
 }
 
-task("javadocJar", type = Jar::class){
-    dependsOn("javadoc")
-    archiveClassifier.set("javadoc")
-    from(tasks.javadoc.get().destinationDir)
-}
-
 signing{
     isRequired = !isFork() && isAction()
 
