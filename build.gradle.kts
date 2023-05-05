@@ -95,7 +95,7 @@ publishing{
         create<MavenPublication>("maven"){
             groupId = "de.thelooter"
             artifactId = "toml4j"
-            version = "0.7.3-SNAPSHOT"
+            version = "0.7.3"
 
             from(components["java"])
 
