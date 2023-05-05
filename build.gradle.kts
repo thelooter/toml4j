@@ -78,9 +78,12 @@ signing{
     sign(publishing.publications)
 }
 
-nexusPublishing{
-    repositories{
-        sonatype{
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+
             username.set(System.getenv("SONATYPE_USERNAME"))
             password.set(System.getenv("SONATYPE_PASSWORD"))
         }
@@ -139,17 +142,6 @@ publishing{
                     system.set("Github Actions")
                     url.set("https://github.com/thelooter/toml4j/actions")
                 }
-            }
-        }
-    }
-
-    repositories{
-        maven{
-            name = "OSSRH"
-            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials{
-                username = findProperty("SONATYPE_USERNAME") as String?
-                password = findProperty("SONATYPE_PASSWORD") as String?
             }
         }
     }
