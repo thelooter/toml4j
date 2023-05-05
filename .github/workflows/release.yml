@@ -12,8 +12,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
-      sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
+      SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+      SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
       SIGNING_KEY: ${{ secrets.GPG_SECRET }}
       SIGNING_PASSWORD: ${{ secrets.GPG_PASSWORD }}
     steps:
