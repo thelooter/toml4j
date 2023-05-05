@@ -81,8 +81,8 @@ signing{
 nexusPublishing{
     repositories{
         sonatype{
-            username.set(findProperty("SONATYPE_USERNAME") as String?)
-            password.set(findProperty("SONATYPE_PASSWORD") as String?)
+            username.set(System.getenv("SONATYPE_USERNAME"))
+            password.set(System.getenv("SONATYPE_PASSWORD"))
         }
     }
 }
