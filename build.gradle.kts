@@ -68,6 +68,12 @@ tasks{
 
 }
 
+task("javadocJar", type = Jar::class){
+    dependsOn("javadoc")
+    archiveClassifier.set("javadoc")
+    from(tasks.javadoc.get().destinationDir)
+}
+
 signing{
     isRequired = !isFork() && isAction()
 
@@ -81,7 +87,7 @@ signing{
 nexusPublishing {
     repositories {
         sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"))
             snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
 
             username.set(System.getenv("SONATYPE_USERNAME"))
