@@ -7,7 +7,7 @@ plugins{
     id("signing")
     id("com.vanniktech.maven.publish") version "0.29.0"
 }
-
+group = "de.thelooter"
 description = "Java Library for parsing TOML"
 version = createVersion()
 
