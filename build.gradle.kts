@@ -117,7 +117,7 @@ mavenPublishing {
         withSourcesJar()
     }
 
-//    signAllPublications()
+    signAllPublications()
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 }
 
