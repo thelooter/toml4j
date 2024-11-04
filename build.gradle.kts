@@ -27,7 +27,6 @@ tasks{
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
 
-        withJavadocJar()
         withSourcesJar()
     }
 
@@ -63,9 +62,6 @@ tasks{
         finalizedBy("jacocoTestReport")
     }
 
-    jar{
-        dependsOn("javadoc")
-    }
 
 }
 
@@ -116,7 +112,12 @@ mavenPublishing {
             url.set("https://github.com/thelooter/toml4j/actions")
         }
     }
-    signAllPublications()
+
+    configure<JavaPluginExtension> {
+        withSourcesJar()
+    }
+
+//    signAllPublications()
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 }
 
