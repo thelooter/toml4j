@@ -32,7 +32,16 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+
+      - name: Setup Gradle to generate and submit dependency graphs
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          dependency-graph: 'generate-and-submit'
+          add-job-summary: 'always'
+
       - name: Build with Gradle
         run: ./gradlew build -x test
       - name: Run Unit Tests
         run: ./gradlew test
+        env:
+          GITHUB_DEPENDENCY_GRAPH_ENABLED: false
