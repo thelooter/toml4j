@@ -3,6 +3,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/de.thelooter/toml4j)](https://search.maven.org)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Build Status](https://github.com/thelooter/toml4j/actions/workflows/gradle.yml/badge.svg)](https://github.com/thelooter/toml4j/actions)
+[![javadoc](https://javadoc.io/badge2/de.thelooter/toml4j/javadoc.svg)](https://javadoc.io/doc/de.thelooter/toml4j)
 
 toml4j is a [TOML 0.4.0](https://github.com/toml-lang/toml/blob/master/versions/en/toml-v0.4.0.md) parser for Java.
 This is a fork of [toml4j](https://github.com/mwanji/toml4j)
