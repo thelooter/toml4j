@@ -8,8 +8,6 @@
 toml4j is a [TOML 0.4.0](https://github.com/toml-lang/toml/blob/master/versions/en/toml-v0.4.0.md) parser for Java.
 This is a fork of [toml4j](https://github.com/mwanji/toml4j)
 
-For the bleeding-edge version integrating the latest specs, see the [work-in-progress branch](https://github.com/thelooter/toml4j/tree/dev).
-
 ## Installation
 
 Add the following dependency to your POM (or equivalent for other dependency managers):
