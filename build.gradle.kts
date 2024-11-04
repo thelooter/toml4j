@@ -1,14 +1,15 @@
-import java.io.ByteArrayOutputStream
+import com.vanniktech.maven.publish.SonatypeHost
 
 plugins{
     id("java-library")
     id("maven-publish")
     id("jacoco")
     id("signing")
-    id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
+    id("com.vanniktech.maven.publish") version "0.29.0"
 }
 
-
+description = "Java Library for parsing TOML"
+version = createVersion()
 
 repositories{
     mavenCentral()
@@ -23,8 +24,8 @@ dependencies{
 
 tasks{
     java{
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
 
         withJavadocJar()
         withSourcesJar()
@@ -68,99 +69,59 @@ tasks{
 
 }
 
-signing{
-    isRequired = !isFork() && isAction()
+mavenPublishing {
+    coordinates(project.group.toString(), rootProject.name, project.version.toString())
 
-    val signingKey = System.getenv("SIGNING_KEY")
-    val signingPassword = System.getenv()["SIGNING_KEY"]
-    useInMemoryPgpKeys(signingKey, signingPassword)
+    pom {
+        name = rootProject.name
+        description = project.description
+        url = "https://github.com/thelooter/toml4j"
 
-    sign(publishing.publications)
-}
+        inceptionYear.set("2024")
 
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-
-            username.set(System.getenv("SONATYPE_USERNAME"))
-            password.set(System.getenv("SONATYPE_PASSWORD"))
-        }
-    }
-}
-
-publishing{
-    publications{
-        create<MavenPublication>("maven"){
-            groupId = "de.thelooter"
-            artifactId = "toml4j"
-            version = "0.7.3"
-
-            from(components["java"])
-
-            pom{
-                name.set("toml4j")
-                description.set("Java library for parsing TOML")
-                url.set("https://github.com/thelooter/toml4j")
-
-                inceptionYear.set("2013")
-
-                licenses{
-                    license{
-                        name.set("MIT License")
-                        url.set("https://opensource.org/licenses/MIT")
-                    }
-                }
-
-                developers {
-                    developer {
-                        id.set("moandji.ezana")
-                        name.set("Moandji Ezana")
-                        email.set("mwanji@gmail.com")
-                    }
-                    developer {
-                        id.set("thelooter")
-                        name.set("Eve Kolb")
-                        email.set("evekolb2204@gmail.com")
-                    }
-                }
-
-                issueManagement{
-                    system.set("GitHub")
-                    url.set("https://github.com/thelooter/toml4j/issues")
-                }
-
-                scm {
-                    connection.set("scm:git:git://github.com/thelooter/toml4j.git")
-                    developerConnection.set("scm:git:git@github.com:thelooter/toml4j.git")
-                    url.set("https://github.com/thelooter/toml4j")
-                    tag.set("HEAD")
-                }
-
-                ciManagement{
-                    system.set("Github Actions")
-                    url.set("https://github.com/thelooter/toml4j/actions")
-                }
+        licenses{
+            license{
+                name.set("MIT License")
+                url.set("https://opensource.org/licenses/MIT")
             }
         }
+
+        developers {
+            developer {
+                id.set("moandji.ezana")
+                name.set("Moandji Ezana")
+                email.set("mwanji@gmail.com")
+            }
+            developer {
+                id.set("thelooter")
+                name.set("Eve Kolb")
+                email.set("evekolb2204@gmail.com")
+            }
+        }
+
+        issueManagement{
+            system.set("GitHub")
+            url.set("https://github.com/thelooter/toml4j/issues")
+        }
+
+        scm {
+            connection.set("scm:git:git://github.com/thelooter/toml4j.git")
+            developerConnection.set("scm:git:git@github.com:thelooter/toml4j.git")
+            url.set("https://github.com/thelooter/toml4j")
+            tag.set("HEAD")
+        }
+
+        ciManagement{
+            system.set("Github Actions")
+            url.set("https://github.com/thelooter/toml4j/actions")
+        }
     }
+    signAllPublications()
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 }
 
-fun isFork(): Boolean {
-    return run("git", "config", "--get", "remote.origin.url").contains("thelooter/toml4j")
-}
+val backupVersion = "1.0.0"
 
-fun isAction(): Boolean {
-    return System.getenv("CI") != null
-}
-
-
-fun run(vararg cmd: String): String {
-    val stdout = ByteArrayOutputStream()
-    exec {
-        commandLine(*cmd)
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
-}
+fun createVersion(): String = System.getenv("TOML4J_VERSION")
+    ?.let { it + (System.getenv("CI")?.let { "" } ?: "-dev") }
+    ?: (backupVersion + (System.getenv("CI")?.let { "" } ?: "-dev"))
