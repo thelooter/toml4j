@@ -4,6 +4,7 @@ package de.thelooter.toml;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class NumberTest {
@@ -26,6 +27,41 @@ public class NumberTest {
     Toml toml = new Toml().read("a = +1001\nb = 1001");
 
     assertEquals(toml.getLong("b"), toml.getLong("a"));
+  }
+
+  @Test
+  public void should_get_integer() {
+    Toml toml = new Toml().read("b = 1001");
+
+    assertEquals(1001, toml.getInteger("b").intValue());
+  }
+
+  @Test
+  public void should_get_negative_integer() {
+    Toml toml = new Toml().read("b = -1001");
+
+    assertEquals(-1001, toml.getInteger("b").intValue());
+  }
+
+  @Test
+  public void should_get_null_integer() {
+    Toml toml = new Toml().read("b = -1001");
+
+    assertNull(toml.getInteger("J"));
+  }
+
+  @Test
+  public void should_get_default_integer() {
+    Toml toml = new Toml().read("b = -1001");
+
+    assertEquals(74, toml.getInteger("J", 74).intValue());
+  }
+
+  @Test
+  public void should_get_integer_with_plus_sign() {
+    Toml toml = new Toml().read("a = +1001\nb = 1001");
+
+    assertEquals(toml.getInteger("b"), toml.getInteger("a"));
   }
 
   @Test
@@ -60,12 +96,19 @@ public class NumberTest {
     assertEquals(-2e-2, toml.getDouble("negative"), 0.0);
     assertEquals(6.626D * Math.pow(10, -34), toml.getDouble("fractional"), 0.0);
   }
-  
+
+  @Test
+  public void should_get_number_with_underscores() {
+    Toml toml = new Toml().read("val = 100_000_000");
+
+    assertEquals(100000000L, toml.getLong("val").longValue());
+  }
+
   @Test
   public void should_get_integer_with_underscores() {
     Toml toml = new Toml().read("val = 100_000_000");
-    
-    assertEquals(100000000L, toml.getLong("val").intValue());
+
+    assertEquals(100000000, toml.getInteger("val").intValue());
   }
   
   @Test

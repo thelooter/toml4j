@@ -156,6 +156,22 @@ public class Toml {
     return val == null ? defaultValue : val;
   }
 
+  public Integer getInteger(String key) {
+      Long val = getLong(key);
+      if (val == null) {
+          return null;
+      }
+      if (val < Integer.MIN_VALUE || val > Integer.MAX_VALUE) {
+          throw new ArithmeticException("Integer overflow: value " + val + " is outside of Integer range");
+      }
+      return val.intValue();
+  }
+
+  public Integer getInteger(String key, Integer defaultValue) {
+      Integer val = getInteger(key);
+      return val == null ? defaultValue : val;
+  }
+
   /**
    * @param key a TOML key
    * @param <T> type of list items
