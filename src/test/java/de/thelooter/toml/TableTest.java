@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TableTest {
   
   @Test
-  public void should_get_table() throws Exception {
+  public void should_get_table() {
     Toml toml = new Toml().read("[group]\nkey = \"value\"");
 
     Toml group = toml.getTable("group");
@@ -16,35 +16,35 @@ public class TableTest {
   }
 
   @Test
-  public void should_get_value_for_multi_key() throws Exception {
+  public void should_get_value_for_multi_key() {
     Toml toml = new Toml().read("[group]\nkey = \"value\"");
 
     assertEquals("value", toml.getString("group.key"));
   }
 
   @Test
-  public void should_get_value_for_multi_key_with_no_parent_table() throws Exception {
+  public void should_get_value_for_multi_key_with_no_parent_table() {
     Toml toml = new Toml().read("[group.sub]\nkey = \"value\"");
 
     assertEquals("value", toml.getString("group.sub.key"));
   }
 
   @Test
-  public void should_get_table_for_multi_key() throws Exception {
+  public void should_get_table_for_multi_key() {
     Toml toml = new Toml().read("[group]\nother=1\n[group.sub]\nkey = \"value\"");
 
     assertEquals("value", toml.getTable("group.sub").getString("key"));
   }
 
   @Test
-  public void should_get_table_for_multi_key_with_no_parent_table() throws Exception {
+  public void should_get_table_for_multi_key_with_no_parent_table() {
     Toml toml = new Toml().read("[group.sub]\nkey = \"value\"");
 
     assertEquals("value", toml.getTable("group.sub").getString("key"));
   }
 
   @Test
-  public void should_get_value_from_table_with_sub_table() throws Exception {
+  public void should_get_value_from_table_with_sub_table() {
     Toml toml = new Toml().read("[a.b]\nc=1\n[a]\nd=2");
 
     assertEquals(2, toml.getLong("a.d").intValue());
@@ -52,13 +52,13 @@ public class TableTest {
   }
   
   @Test
-  public void should_get_empty_table() throws Exception {
+  public void should_get_empty_table() {
     Toml toml = new Toml().read("[a]");
     assertTrue(toml.getTable("a").isEmpty());
   }
   
   @Test
-  public void should_return_null_for_missing_table() throws Exception {
+  public void should_return_null_for_missing_table() {
     assertNull(new Toml().getTable("a"));
   }
 
@@ -105,7 +105,7 @@ public class TableTest {
   }
   
   @Test
-  public void should_return_null_when_navigating_to_missing_value() throws Exception {
+  public void should_return_null_when_navigating_to_missing_value() {
     Toml toml = new Toml();
     
     assertNull(toml.getString("a.b"));
@@ -114,7 +114,7 @@ public class TableTest {
   }
 
   @Test
-  public void should_return_null_when_no_value_for_multi_key() throws Exception {
+  public void should_return_null_when_no_value_for_multi_key() {
     Toml toml = new Toml().read("");
 
     assertNull(toml.getString("group.key"));

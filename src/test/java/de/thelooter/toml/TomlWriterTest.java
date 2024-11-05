@@ -7,13 +7,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.lang.annotation.RetentionPolicy;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -26,7 +24,6 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -44,10 +41,10 @@ public class TomlWriterTest {
   @Test
   public void should_write_primitive_types() {
     class TestClass {
-      public String aString = "hello";
-      int anInt = 4;
-      protected float aFloat = 1.23f;
-      private double aDouble = -5.43;
+      public final String aString = "hello";
+      final int anInt = 4;
+      protected final float aFloat = 1.23f;
+      private final double aDouble = -5.43;
       final boolean aBoolean = false;
       static final int aFinalInt = 1; // Should be skipped
       Date aDate;
@@ -71,14 +68,18 @@ public class TomlWriterTest {
     assertEquals(expected, output);
   }
 
-  class SubChild {
+  static class SubChild {
     int anInt;
   }
-  class Child {
+
+  /**
+   *
+   */
+  static class Child {
     SubChild subChild;
     int anInt;
   }
-  class Parent {
+  static class Parent {
     Map<String, Object> aMap;
     Child child;
     boolean aBoolean;
@@ -86,7 +87,7 @@ public class TomlWriterTest {
 
   private Parent buildNestedMap() {
     Parent parent = new Parent();
-    parent.aMap = new LinkedHashMap<String, Object>();
+    parent.aMap = new LinkedHashMap<>();
     parent.aMap.put("foo", 1);
     parent.aMap.put("bar", "value1");
     parent.aMap.put("baz.x", true);
@@ -172,15 +173,15 @@ public class TomlWriterTest {
   @Test
   public void should_write_array_of_tables_from_object() {
     class Table {
-      int anInt;
+      final int anInt;
 
       Table(int anInt) {
         this.anInt = anInt;
       }
     }
     class Config {
-      Table[] table = new Table[]{new Table(1), new Table(2)};
-      List<Table> table2 = Arrays.asList(new Table(3), new Table(4));
+      final Table[] table = new Table[]{new Table(1), new Table(2)};
+      final List<Table> table2 = Arrays.asList(new Table(3), new Table(4));
     }
     Config config = new Config();
 
@@ -197,18 +198,18 @@ public class TomlWriterTest {
   }
   
   @Test
-  public void should_write_array_of_tables_from_map() throws Exception {
-    List<Map<String, Object>> maps = new ArrayList<Map<String,Object>>();
+  public void should_write_array_of_tables_from_map() {
+    List<Map<String, Object>> maps = new ArrayList<>();
     
-    HashMap<String, Object> item1 = new HashMap<String, Object>();
+    HashMap<String, Object> item1 = new HashMap<>();
     item1.put("anInt", 1L);
-    HashMap<String, Object> item2 = new HashMap<String, Object>();
+    HashMap<String, Object> item2 = new HashMap<>();
     item2.put("anInt", 2L);
 
     maps.add(item1);
     maps.add(item2);
     
-    Map<String, Object> input = new HashMap<String, Object>();
+    Map<String, Object> input = new HashMap<>();
     input.put("maps", maps);
     
     String output = new TomlWriter().write(input);
@@ -223,7 +224,7 @@ public class TomlWriterTest {
   @Test
   public void should_write_array_of_array() {
     class ArrayTest {
-      int[][] array = {{1, 2, 3}, {4, 5, 6}};
+      final int[][] array = {{1, 2, 3}, {4, 5, 6}};
     }
     ArrayTest arrayTest = new ArrayTest();
 
@@ -235,7 +236,7 @@ public class TomlWriterTest {
   @Test
   public void should_write_list() {
     class ListTest {
-      List<Integer> aList = new LinkedList<Integer>();
+      final List<Integer> aList = new LinkedList<>();
     }
     ListTest o = new ListTest();
     o.aList.add(1);
@@ -247,8 +248,8 @@ public class TomlWriterTest {
   @Test
   public void should_handle_zero_length_arrays_and_lists() {
     class TestClass {
-      List<Integer> aList = new LinkedList<Integer>();
-      Float[] anArray = new Float[0];
+      final List<Integer> aList = new LinkedList<>();
+      final Float[] anArray = new Float[0];
     }
     assertEquals("aList = []\nanArray = []\n", new TomlWriter().write(new TestClass()));
   }
@@ -256,10 +257,10 @@ public class TomlWriterTest {
   @Test
   public void should_reject_heterogeneous_arrays() {
     class BadArray {
-      Object[] array = new Object[2];
+      final Object[] array = new Object[2];
     }
     BadArray badArray = new BadArray();
-    badArray.array[0] = Integer.valueOf(1);
+    badArray.array[0] = 1;
     badArray.array[1] = "oops";
 
     IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, () -> {
@@ -273,11 +274,11 @@ public class TomlWriterTest {
   @Test
   public void should_reject_nested_heterogeneous_array() {
     class BadArray {
-      Map<String, Object> aMap = new HashMap<String, Object>();
+      final Map<String, Object> aMap = new HashMap<>();
     }
     
     BadArray badArray = new BadArray();
-    badArray.aMap.put("array", new Object[] { Integer.valueOf(1), "oops" });
+    badArray.aMap.put("array", new Object[] {1, "oops" });
 
     IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, () -> {
       new TomlWriter().write(badArray);
@@ -289,27 +290,27 @@ public class TomlWriterTest {
   @Test
   public void should_elide_empty_intermediate_tables() {
     class C {
-      int anInt = 1;
+      final int anInt = 1;
     }
     class B {
-      C c = new C();
+      final C c = new C();
     }
     class A {
-      B b = new B();
+      final B b = new B();
     }
 
     assertEquals("[b.c]\nanInt = 1\n", new TomlWriter().write(new A()));
   }
   
   @Test
-  public void should_write_map() throws Exception {
+  public void should_write_map() {
     assertEquals("a = 1\n", new TomlWriter().write(new Toml().read("a = 1").toMap()));
   }
 
-  class Base {
+  static class Base {
     protected int anInt = 2;
   }
-  class Impl extends Base {
+  static class Impl extends Base {
     boolean aBoolean = true;
   }
 
@@ -321,7 +322,7 @@ public class TomlWriterTest {
   }
 
   @Test
-  public void should_write_strings_to_toml_utf8() throws UnsupportedEncodingException {
+  public void should_write_strings_to_toml_utf8() {
     class Utf8Test {
       String input;
     }
@@ -337,7 +338,7 @@ public class TomlWriterTest {
 
   @Test
   public void should_quote_keys() {
-    Map<String, Integer> aMap = new LinkedHashMap<String, Integer>();
+    Map<String, Integer> aMap = new LinkedHashMap<>();
     aMap.put("a.b", 1);
     aMap.put("5€", 2);
     aMap.put("c$d", 3);
@@ -351,15 +352,15 @@ public class TomlWriterTest {
   }
   
   @Test
-  public void should_quote_keys_in_object() throws Exception {
+  public void should_quote_keys_in_object() {
     class A$ {
-      Double µµ = 5.3;
+      final Double µµ = 5.3;
     }
     
     class A {
-      int €5 = 5;
-      String français = "langue";
-      A$ a$ = new A$();
+      final int €5 = 5;
+      final String français = "langue";
+      final A$ a$ = new A$();
     }
     
     assertEquals("\"€5\" = 5\n\"français\" = \"langue\"\n\n[\"a$\"]\n\"µµ\" = 5.3\n", new TomlWriter().write(new A()));
@@ -383,28 +384,28 @@ public class TomlWriterTest {
   }
 
   @Test
-  public void should_handle_enum() throws Exception {
+  public void should_handle_enum() {
     class WithEnum {
-      RetentionPolicy retentionPolicy = RetentionPolicy.RUNTIME;
+      final RetentionPolicy retentionPolicy = RetentionPolicy.RUNTIME;
     }
     
     assertEquals("retentionPolicy = \"RUNTIME\"\n", new TomlWriter().write(new WithEnum()));
   }
   
   @Test
-  public void should_handle_char() throws Exception {
+  public void should_handle_char() {
     class WithChar {
-      char c = 'a';
+      final char c = 'a';
     }
     
     assertEquals("c = \"a\"\n", new TomlWriter().write(new WithChar()));
   }
   
   @Test
-  public void should_handle_big_numbers() throws Exception {
+  public void should_handle_big_numbers() {
     class WithBigNumbers {
-      BigInteger bigInt = BigInteger.valueOf(1);
-      BigDecimal bigDecimal = BigDecimal.valueOf(2.8);
+      final BigInteger bigInt = BigInteger.valueOf(1);
+      final BigDecimal bigDecimal = BigDecimal.valueOf(2.8);
     }
     
     String expected = "bigInt = 1\n"
@@ -414,11 +415,11 @@ public class TomlWriterTest {
   }
   
   @Test
-  public void should_handle_wrappers() throws Exception {
+  public void should_handle_wrappers() {
     class WithWrappers {
-      Character c = Character.valueOf('b');
-      Long l = Long.valueOf(2);
-      Double d = Double.valueOf(3.4);
+      final Character c = 'b';
+      final Long l = 2L;
+      final Double d = 3.4;
     }
     
     String expected = "c = \"b\"\n"
@@ -429,12 +430,12 @@ public class TomlWriterTest {
   }
   
   @Test
-  public void should_use_specified_time_zone() throws Exception {
+  public void should_use_specified_time_zone() {
     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     calendar.set(2015, Calendar.JULY, 1, 11, 5, 30);
     calendar.set(Calendar.MILLISECOND, 0);
     
-    Map<String, Date> o = new HashMap<String, Date>();
+    Map<String, Date> o = new HashMap<>();
     
     o.put("sast", calendar.getTime());
     
@@ -446,12 +447,12 @@ public class TomlWriterTest {
   }
   
   @Test
-  public void should_show_fractional_seconds() throws Exception {
+  public void should_show_fractional_seconds() {
     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     calendar.set(2015, Calendar.JULY, 1, 11, 5, 30);
     calendar.set(Calendar.MILLISECOND, 345);
     
-    Map<String, Date> o = new HashMap<String, Date>();
+    Map<String, Date> o = new HashMap<>();
     
     o.put("date", calendar.getTime());
     
@@ -463,12 +464,12 @@ public class TomlWriterTest {
   }
   
   @Test
-  public void should_show_fractional_seconds_in_specified_time_zone() throws Exception {
+  public void should_show_fractional_seconds_in_specified_time_zone() {
     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     calendar.set(2015, Calendar.JULY, 1, 11, 5, 30);
     calendar.set(Calendar.MILLISECOND, 345);
     
-    Map<String, Date> o = new LinkedHashMap<String, Date>();
+    Map<String, Date> o = new LinkedHashMap<>();
     
     o.put("date", calendar.getTime());
     calendar.set(Calendar.MINUTE, 37);
@@ -519,7 +520,7 @@ public class TomlWriterTest {
   }
   
   @Test
-  public void should_skip_transient_fields() throws Exception {
+  public void should_skip_transient_fields() {
     String toml = new TomlWriter().write(new TransientClass());
     
     assertEquals("a = 2\n", toml);
@@ -558,23 +559,20 @@ public class TomlWriterTest {
 
   @Test
   public void should_not_write_list() {
-    assertThrows(IllegalArgumentException.class, () ->new TomlWriter().write(Arrays.asList("a")));
+    assertThrows(IllegalArgumentException.class, () ->new TomlWriter().write(List.of("a")));
   }
 
   private String readFile(File input) throws IOException {
-    BufferedReader bufferedReader = new BufferedReader(new FileReader(input));
 
-    try {
-      StringBuilder w = new StringBuilder();
-      String line = bufferedReader.readLine();
-      while (line != null) {
-        w.append(line).append('\n');
-        line = bufferedReader.readLine();
+      try (BufferedReader bufferedReader = new BufferedReader(new FileReader(input))) {
+          StringBuilder w = new StringBuilder();
+          String line = bufferedReader.readLine();
+          while (line != null) {
+              w.append(line).append('\n');
+              line = bufferedReader.readLine();
+          }
+
+          return w.toString();
       }
-
-      return w.toString();
-    } finally {
-      bufferedReader.close();
-    }
   }
 }
