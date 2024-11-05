@@ -75,14 +75,14 @@ public class IterationTest {
   public void should_iterate_over_multiple_entries() {
     Toml toml = new Toml().read(new File("src/test/resources/IteratorTest/multiple.toml"));
 
-    Map<String, Object> entries = new HashMap<String, Object>();
+    Map<String, Object> entries = new HashMap<>();
     for (Map.Entry<String, Object> entry : toml.entrySet()) {
       entries.put(entry.getKey(), entry.getValue());
     }
     
     assertThat(entries.keySet(), containsInAnyOrder("a", "b", "c", "e"));
-    assertThat(entries, hasEntry("a", (Object) "a"));
-    assertThat(entries, hasEntry("b", (Object) asList(1L, 2L, 3L)));
+    assertThat(entries, hasEntry("a", "a"));
+    assertThat(entries, hasEntry("b", asList(1L, 2L, 3L)));
     assertTrue(((Toml) entries.get("c")).getBoolean("d"));
     assertThat(((List<Toml>) entries.get("e")), hasSize(1));
   }

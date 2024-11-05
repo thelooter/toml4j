@@ -8,35 +8,35 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class BareKeysTest {
   
   @Test
-  public void should_ignore_spaces_around_key_segments() throws Exception {
+  public void should_ignore_spaces_around_key_segments() {
     Toml toml = new Toml().read("[ a . b   . c  ]  \n  key = \"a\"");
     
     assertEquals("a", toml.getString("a.b.c.key"));
   }
 
   @Test
-  public void should_support_underscores_in_key_names() throws Exception {
+  public void should_support_underscores_in_key_names() {
     Toml toml = new Toml().read("a_a = 1");
 
     assertEquals(1, toml.getLong("a_a").intValue());
   }
 
   @Test
-  public void should_support_underscores_in_table_names() throws Exception {
+  public void should_support_underscores_in_table_names() {
     Toml toml = new Toml().read("[group_a]\na = 1");
 
     assertEquals(1, toml.getLong("group_a.a").intValue());
   }
 
   @Test
-  public void should_support_numbers_in_key_names() throws Exception {
+  public void should_support_numbers_in_key_names() {
     Toml toml = new Toml().read("a1 = 1");
 
     assertEquals(1, toml.getLong("a1").intValue());
   }
 
   @Test
-  public void should_support_numbers_in_table_names() throws Exception {
+  public void should_support_numbers_in_table_names() {
     Toml toml = new Toml().read("[group1]\na = 1");
 
     assertEquals(1, toml.getLong("group1.a").intValue());

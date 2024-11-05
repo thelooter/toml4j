@@ -41,12 +41,12 @@ public class InlineTableTest {
   public void should_read_inline_table_with_floats() {
     Toml toml = new Toml().read("point = { x = 1.5, y = 2.3 }");
     
-    assertEquals(1.5, toml.getTable("point").getDouble("x").doubleValue(), 0);
-    assertEquals(2.3, toml.getDouble("point.y").doubleValue(), 0);
+    assertEquals(1.5, toml.getTable("point").getDouble("x"), 0);
+    assertEquals(2.3, toml.getDouble("point.y"), 0);
   }
   
   @Test
-  public void should_read_inline_table_with_booleans() throws Exception {
+  public void should_read_inline_table_with_booleans() {
     Toml toml = new Toml().read("point = { x = false, y = true }");
     
     assertTrue(toml.getTable("point").getBoolean("y"));
@@ -54,7 +54,7 @@ public class InlineTableTest {
   }
   
   @Test
-  public void should_read_inline_table_with_dates() throws Exception {
+  public void should_read_inline_table_with_dates() {
     Toml toml = new Toml().read("point = { x = 2015-02-09T22:05:00Z, y = 2015-02-09T21:05:00Z }");
 
     Calendar x = Calendar.getInstance(UTC);
@@ -70,25 +70,25 @@ public class InlineTableTest {
   }
   
   @Test
-  public void should_read_arrays() throws Exception {
+  public void should_read_arrays() {
     Toml toml = new Toml().read("arrays = { integers = [1, 2, 3], strings = [\"a\", \"b\", \"c\"] }");
     
-    assertThat(toml.<Long>getList("arrays.integers"), contains(1L, 2L, 3L));
-    assertThat(toml.<String>getList("arrays.strings"), contains("a", "b", "c"));
+    assertThat(toml.getList("arrays.integers"), contains(1L, 2L, 3L));
+    assertThat(toml.getList("arrays.strings"), contains("a", "b", "c"));
   }
   
   @Test
-  public void should_read_nested_arrays() throws Exception {
+  public void should_read_nested_arrays() {
     Toml toml = new Toml().read("arrays = { nested = [[1, 2, 3], [4, 5, 6]] }").getTable("arrays");
     
-    List<List<Long>> nested = toml.<List<Long>>getList("nested");
+    List<List<Long>> nested = toml.getList("nested");
     assertThat(nested, hasSize(2));
     assertThat(nested.get(0), contains(1L, 2L, 3L));
     assertThat(nested.get(1), contains(4L, 5L, 6L));
   }
   
   @Test
-  public void should_read_mixed_inline_table() throws Exception {
+  public void should_read_mixed_inline_table() {
     Toml toml = new Toml().read("point = { date = 2015-02-09T22:05:00Z, bool = true, integer = 123, float = 123.456, string = \"abc\", list = [5, 6, 7, 8] }").getTable("point");
 
 
@@ -101,11 +101,11 @@ public class InlineTableTest {
     assertEquals(123, toml.getLong("integer").intValue());
     assertEquals(123.456, toml.getDouble("float"), 0);
     assertEquals("abc", toml.getString("string"));
-    assertThat(toml.<Long>getList("list"), contains(5L, 6L, 7L, 8L));
+    assertThat(toml.getList("list"), contains(5L, 6L, 7L, 8L));
   }
   
   @Test
-  public void should_read_nested_inline_tables() throws Exception {
+  public void should_read_nested_inline_tables() {
     Toml tables = new Toml().read("tables = { t1 = { t1_1 = 1, t1_2 = 2}, t2 = { t2_1 = { t2_1_1 = \"a\" }} }").getTable("tables");
     
     assertEquals(1L, tables.getLong("t1.t1_1").longValue());
@@ -114,7 +114,7 @@ public class InlineTableTest {
   }
   
   @Test
-  public void should_read_all_string_types() throws Exception {
+  public void should_read_all_string_types() {
     Toml strings = new Toml().read("strings = { literal = 'ab]\"c', multiline = \"\"\"de]\"f\"\"\", multiline_literal = '''gh]\"i''' }").getTable("strings");
     
     assertEquals("ab]\"c", strings.getString("literal"));
@@ -123,14 +123,14 @@ public class InlineTableTest {
   }
   
   @Test
-  public void should_read_inline_table_in_regular_table() throws Exception {
+  public void should_read_inline_table_in_regular_table() {
     Toml toml = new Toml().read("[tbl]\n tbl = { tbl = 1 }");
     
     assertEquals(1, toml.getLong("tbl.tbl.tbl").intValue());
   }
   
   @Test
-  public void should_mix_with_tables() throws Exception {
+  public void should_mix_with_tables() {
     Toml toml = new Toml().read("t = { k = 1 }\n  [b]\n  k = 2\n  t = { k = 3}");
     
     assertEquals(1, toml.getLong("t.k").intValue());
@@ -139,7 +139,7 @@ public class InlineTableTest {
   }
   
   @Test
-  public void should_add_properties_to_existing_inline_table() throws Exception {
+  public void should_add_properties_to_existing_inline_table() {
     Toml toml = new Toml().read("[a]\n  b = {k = 1}\n  [a.b.c]\n k = 2");
     
     assertEquals(1, toml.getLong("a.b.k").intValue());
@@ -147,7 +147,7 @@ public class InlineTableTest {
   }
   
   @Test
-  public void should_mix_with_table_arrays() throws Exception {
+  public void should_mix_with_table_arrays() {
     Toml toml = new Toml().read("t = { k = 1 }\n  [[b]]\n  t = { k = 2 }\n [[b]]\n  t = { k = 3 }");
     
     assertEquals(1, toml.getLong("t.k").intValue());
@@ -171,29 +171,29 @@ public class InlineTableTest {
   }
   
   @Test
-  public void should_fail_when_key_duplicated_inside_inline_table() throws Exception {
+  public void should_fail_when_key_duplicated_inside_inline_table() {
 
     IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, () -> {
-      new Toml().read("tbl = { a = 1, a = 2 }");
+        new Toml().read("tbl = { a = 1, a = 2 }");
     });
     assertEquals("Duplicate key on line 1: a", illegalStateException.getMessage());
 
   }
   
   @Test
-  public void should_fail_when_duplicated_by_other_key() throws Exception {
+  public void should_fail_when_duplicated_by_other_key() {
 
     IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, () -> {
-      new Toml().read("tbl = { a = 1 }\n tbl = 1");
+        new Toml().read("tbl = { a = 1 }\n tbl = 1");
     });
 
     assertEquals("Table already exists for key defined on line 2: tbl", illegalStateException.getMessage());
   }
   
   @Test
-  public void should_fail_when_duplicated_by_other_inline_table() throws Exception {
+  public void should_fail_when_duplicated_by_other_inline_table() {
     IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, () -> {
-      new Toml().read("tbl = { a = 1 }\n tbl = {}");
+        new Toml().read("tbl = { a = 1 }\n tbl = {}");
     });
 
     assertEquals("Duplicate table definition on line 2: [tbl]", illegalStateException.getMessage());
@@ -201,16 +201,16 @@ public class InlineTableTest {
   }
   
   @Test
-  public void should_fail_when_duplicated_by_top_level_table() throws Exception {
+  public void should_fail_when_duplicated_by_top_level_table() {
     IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, () -> {
-      new Toml().read("tbl = {}\n [tbl]");
+        new Toml().read("tbl = {}\n [tbl]");
     });
 
     assertEquals("Duplicate table definition on line 2: [tbl]", illegalStateException.getMessage());
   }
   
   @Test
-  public void should_fail_when_duplicates_second_level_table() throws Exception {
+  public void should_fail_when_duplicates_second_level_table() {
     IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, () -> {
       new Toml().read("[a.b]\n  [a]\n b = {}");
     });
@@ -219,7 +219,7 @@ public class InlineTableTest {
   }
   
   @Test
-  public void should_fail_when_inline_table_duplicates_table() throws Exception {
+  public void should_fail_when_inline_table_duplicates_table() {
     IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, () -> {
       new Toml().read("[a.b]\n [a]\n b = {}");
     });
@@ -228,7 +228,7 @@ public class InlineTableTest {
   }
   
   @Test
-  public void should_fail_when_second_level_table_duplicates_inline_table() throws Exception {
+  public void should_fail_when_second_level_table_duplicates_inline_table() {
     IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, () -> {
       new Toml().read("[a]\n b = {}\n  [a.b]");
     });

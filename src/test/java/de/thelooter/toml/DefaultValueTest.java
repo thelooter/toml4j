@@ -53,13 +53,13 @@ public class DefaultValueTest {
   @Test
   public void should_get_double() {
     Toml toml = new Toml().read("n = 0.5");
-    assertEquals(Double.valueOf(0.5), toml.getDouble("n", Double.valueOf(0.6)));
+    assertEquals(Double.valueOf(0.5), toml.getDouble("n", 0.6));
   }
 
   @Test
   public void should_get_double_default_value() {
     Toml toml = new Toml().read("");
-    assertEquals(Double.valueOf(0.6), toml.getDouble("n", Double.valueOf(0.6)));
+    assertEquals(Double.valueOf(0.6), toml.getDouble("n", 0.6));
   }
 
   @Test
