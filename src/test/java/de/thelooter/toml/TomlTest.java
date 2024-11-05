@@ -38,14 +38,14 @@ public class TomlTest {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/should_allow_comment_after_values.toml"));
 
     assertEquals(1, toml.getLong("a").intValue());
-    assertEquals(1.1, toml.getDouble("b").doubleValue(), 0);
+    assertEquals(1.1, toml.getDouble("b"), 0);
     assertEquals("abc", toml.getString("c"));
     Calendar cal = Calendar.getInstance();
     cal.set(2014, Calendar.AUGUST, 4, 13, 47, 0);
     cal.set(Calendar.MILLISECOND, 0);
     cal.setTimeZone(TimeZone.getTimeZone("UTC"));
     assertEquals(cal.getTime(), toml.getDate("d"));
-    assertThat(toml.<String>getList("e"), Matchers.contains("a", "b"));
+    assertThat(toml.getList("e"), Matchers.contains("a", "b"));
     assertTrue(toml.getBoolean("f"));
     assertEquals("abc", toml.getString("g"));
     assertEquals("abc", toml.getString("h"));

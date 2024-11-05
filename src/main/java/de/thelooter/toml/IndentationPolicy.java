@@ -2,7 +2,6 @@ package de.thelooter.toml;
 
 /**
  * Controls how a {@link TomlWriter} indents tables and key/value pairs.
- *
  * The default policy is to not indent.
  */
 class IndentationPolicy {

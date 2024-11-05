@@ -16,21 +16,21 @@ import org.junit.jupiter.api.Test;
 public class TomlReadTest {
 
   @Test
-  public void should_read_input_stream() throws Exception {
+  public void should_read_input_stream() {
     Toml toml = new Toml().read(getClass().getResourceAsStream("should_load_from_file.toml"));
 
     assertEquals("value", toml.getString("key"));
   }
 
   @Test
-  public void should_read_reader() throws Exception {
+  public void should_read_reader() {
     Toml toml = new Toml().read(new StringReader("key=1"));
 
     assertEquals(1, toml.getLong("key").intValue());
   }
 
   @Test
-  public void should_fail_on_missing_file() throws Exception {
+  public void should_fail_on_missing_file() {
     try {
       new Toml().read(new File("missing"));
       fail("Exception should have been thrown");
@@ -40,7 +40,7 @@ public class TomlReadTest {
   }
 
   @Test
-  public void should_fail_on_io_error() throws Exception {
+  public void should_fail_on_io_error() {
     Reader readerThatThrows = new Reader() {
 
       @Override
@@ -49,7 +49,7 @@ public class TomlReadTest {
       }
 
       @Override
-      public void close() throws IOException {}
+      public void close() {}
     };
 
     try {

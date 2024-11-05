@@ -26,7 +26,7 @@ class BooleanValueReaderWriter implements ValueReader, ValueWriter {
 
   @Override
   public boolean canWrite(Object value) {
-    return Boolean.class.isInstance(value);
+    return value instanceof Boolean;
   }
 
   @Override

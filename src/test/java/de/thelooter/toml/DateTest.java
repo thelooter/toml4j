@@ -14,7 +14,7 @@ public class DateTest {
   private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
   @Test
-  public void should_get_date() throws Exception {
+  public void should_get_date() {
     Toml toml = new Toml().read("a_date = 2011-11-10T13:12:00Z");
 
     Calendar calendar = Calendar.getInstance(UTC);
@@ -25,7 +25,7 @@ public class DateTest {
   }
 
   @Test
-  public void should_get_date_with_offset() throws Exception {
+  public void should_get_date_with_offset() {
     Toml toml = new Toml().read("a_date = 1979-05-27T00:32:00-07:00");
 
     Calendar calendar = Calendar.getInstance(UTC);
@@ -36,7 +36,7 @@ public class DateTest {
   }
 
   @Test
-  public void should_get_date_with_positive_offset() throws Exception {
+  public void should_get_date_with_positive_offset() {
     Toml toml = new Toml().read("a_date = 1979-05-27T07:32:00+07:00");
 
     Calendar calendar = Calendar.getInstance(UTC);
@@ -47,7 +47,7 @@ public class DateTest {
   }
   
   @Test
-  public void should_get_date_with_fractional_seconds() throws Exception {
+  public void should_get_date_with_fractional_seconds() {
     Toml toml = new Toml().read("a_date = 1979-05-27T00:32:00.999Z");
     
     Calendar calendar = Calendar.getInstance(UTC);
@@ -58,7 +58,7 @@ public class DateTest {
   }
   
   @Test
-  public void should_get_date_with_fractional_seconds_and_offset() throws Exception {
+  public void should_get_date_with_fractional_seconds_and_offset() {
     Toml toml = new Toml().read("a_date = 1979-05-27T00:32:00.999-07:00");
     
     Calendar calendar = Calendar.getInstance(UTC);

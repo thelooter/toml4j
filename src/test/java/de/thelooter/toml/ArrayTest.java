@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 import de.thelooter.toml.testutils.Utils;
@@ -17,75 +16,73 @@ import org.junit.jupiter.api.Test;
 public class ArrayTest {
   
   @Test
-  public void should_get_array() throws Exception {
+  public void should_get_array() {
     Toml toml = new Toml().read("list = [\"a\", \"b\", \"c\"]");
 
     assertEquals(asList("a", "b", "c"), toml.<String>getList("list"));
   }
 
   @Test
-  public void should_return_null_if_no_value_for_key() throws Exception {
+  public void should_return_null_if_no_value_for_key() {
     Toml toml = new Toml().read("");
 
     assertNull(toml.getList("a"));
   }
 
   @Test
-  public void should_allow_multiline_array() throws Exception {
+  public void should_allow_multiline_array() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/should_allow_multiline_array.toml"));
 
     assertEquals(asList("a", "b", "c"), toml.<String>getList("a"));
   }
 
   @Test
-  @SuppressWarnings("unchecked")
-  public void should_get_nested_arrays() throws Exception {
+  public void should_get_nested_arrays() {
     Toml clients = new Toml().read("data = [ [\"gamma\", \"delta\"], [1, 2]] # just an update to make sure parsers support it");
 
     assertEquals(asList(asList("gamma", "delta"), asList(1L, 2L)), clients.<String>getList("data"));
   }
   
   @Test
-  public void should_get_deeply_nested_arrays() throws Exception {
+  public void should_get_deeply_nested_arrays() {
     List<List<?>> data = new Toml().read("data = [[[1], [2]], [3, 4]]").getList("data");
     
     assertThat(data, hasSize(2));
-    assertEquals(Arrays.asList(1L), data.get(0).get(0));
-    assertEquals(asList(2L), data.get(0).get(1));
+    assertEquals(List.of(1L), data.get(0).get(0));
+    assertEquals(List.of(2L), data.get(0).get(1));
     assertEquals(asList(3L, 4L), data.get(1));
   }
 
   @Test
-  @SuppressWarnings("unchecked")
-  public void should_get_nested_arrays_with_no_space_between_outer_and_inner_array() throws Exception {
+  public void should_get_nested_arrays_with_no_space_between_outer_and_inner_array() {
     Toml clients = new Toml().read("data = [[\"gamma\", \"delta\"], [1, 2]] # just an update to make sure parsers support it");
 
     assertEquals(asList(asList("gamma", "delta"), asList(1L, 2L)), clients.<String>getList("data"));
   }
 
   @Test
-  public void should_ignore_comma_at_end_of_array() throws Exception {
+  public void should_ignore_comma_at_end_of_array() {
     Toml toml = new Toml().read("key=[1,2,3,]");
 
     assertEquals(asList(1L, 2L, 3L), toml.<Long>getList("key"));
   }
   
   @Test
-  public void should_support_mixed_string_types() throws Exception {
+  public void should_support_mixed_string_types() {
     Toml toml = new Toml().read("key = [\"a\", 'b', \"\"\"c\"\"\", '''d''']");
     
-    assertThat(toml.<String>getList("key"), contains("a", "b", "c", "d"));
+    assertThat(toml.getList("key"), contains("a", "b", "c", "d"));
   }
   
   @Test
-  public void should_support_array_terminator_in_strings() throws Exception {
+  public void should_support_array_terminator_in_strings() {
     Toml toml = new Toml().read("key = [\"a]\", 'b]', \"\"\"c]\"\"\", '''d]''']");
     
-    assertThat(toml.<String>getList("key"), contains("a]", "b]", "c]", "d]"));
+    assertThat(toml.getList("key"), contains("a]", "b]", "c]", "d]"));
   }
   
   @Test
-  public void should_support_array_of_inline_tables() throws Exception {
+  public void should_support_array_of_inline_tables() {
     Toml toml = new Toml().read(getClass().getResourceAsStream("should_support_array_of_inline_tables.toml"));
     
     assertThat(toml.getList("points"), hasSize(4));

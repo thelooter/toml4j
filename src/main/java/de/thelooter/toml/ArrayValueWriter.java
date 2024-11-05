@@ -34,7 +34,7 @@ abstract class ArrayValueWriter implements ValueWriter {
     if (value.getClass().isArray()) {
       // Arrays.asList() interprets an array as a single element,
       // so convert it to a list by hand
-      collection = new ArrayList<Object>(Array.getLength(value));
+      collection = new ArrayList<>(Array.getLength(value));
       for (int i = 0; i < Array.getLength(value); i++) {
         Object elem = Array.get(value, i);
         collection.add(elem);
@@ -55,7 +55,7 @@ abstract class ArrayValueWriter implements ValueWriter {
       }
     } else {
       Collection<?> collection = (Collection<?>) value;
-      if (collection.size() > 0) {
+      if (!collection.isEmpty()) {
         return collection.iterator().next();
       }
     }

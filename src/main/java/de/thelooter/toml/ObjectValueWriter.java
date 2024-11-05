@@ -3,7 +3,6 @@ package de.thelooter.toml;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -19,7 +18,7 @@ class ObjectValueWriter implements ValueWriter {
 
   @Override
   public void write(Object value, WriterContext context) {
-    Map<String, Object> to = new LinkedHashMap<String, Object>();
+    Map<String, Object> to = new LinkedHashMap<>();
     Set<Field> fields = getFields(value.getClass());
     for (Field field : fields) {
       to.put(field.getName(), getFieldValue(field, value));
@@ -34,7 +33,7 @@ class ObjectValueWriter implements ValueWriter {
   }
 
   private static Set<Field> getFields(Class<?> cls) {
-    Set<Field> fields = new LinkedHashSet<Field>(Arrays.asList(cls.getDeclaredFields()));
+    Set<Field> fields = new LinkedHashSet<>(Arrays.asList(cls.getDeclaredFields()));
     while (cls != Object.class) {
       fields.addAll(Arrays.asList(cls.getDeclaredFields()));
       cls = cls.getSuperclass();
@@ -45,13 +44,12 @@ class ObjectValueWriter implements ValueWriter {
   }
 
   private static void removeConstantsAndSyntheticFields(Set<Field> fields) {
-    Iterator<Field> iterator = fields.iterator();
-    while (iterator.hasNext()) {
-      Field field = iterator.next();
-      if ((Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) || field.isSynthetic() || Modifier.isTransient(field.getModifiers())) {
-        iterator.remove();
-      }
-    }
+    fields.removeIf(field -> {
+      int modifiers = field.getModifiers();
+      return (Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))
+              || field.isSynthetic()
+              || Modifier.isTransient(modifiers);
+    });;
   }
 
   private static Object getFieldValue(Field field, Object o) {

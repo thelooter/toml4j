@@ -26,7 +26,7 @@ import de.thelooter.toml.testutils.TomlTables;
 public class TomlToClassTest {
 
   @Test
-  public void should_convert_toml_primitives() throws Exception {
+  public void should_convert_toml_primitives() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/should_convert_primitive_values.toml"));
 
     TomlPrimitives values = toml.to(TomlPrimitives.class);
@@ -47,21 +47,17 @@ public class TomlToClassTest {
   public void should_convert_to_non_toml_primitives() throws Exception {
     ExtraPrimitives extraPrimitives = new Toml().read(new File("src/test/resources/de/thelooter/toml/should_convert_extra_primitives.toml")).to(ExtraPrimitives.class);
 
-    assertEquals("value", extraPrimitives.group.get("key"),() -> "Did not convert table to map");
-    assertEquals(BigDecimal.valueOf(1.2), extraPrimitives.bigDecimal, () -> "Did not convert double to BigDecimal");
-    assertEquals(BigInteger.valueOf(5), extraPrimitives.bigInteger, () -> "Did not convert integer to BigInteger");
-    assertEquals(Short.parseShort("3"), extraPrimitives.aShort,() -> "Did not convert integer to short");
-    assertEquals(Integer.valueOf(7), extraPrimitives.anInteger, () -> "Did not convert integer to Integer");
-    assertEquals(Character.valueOf('u'), extraPrimitives.character, () -> "Did not convert string to Character");
-    assertEquals(new URL("http://www.example.com").toString(), extraPrimitives.url.toString(),() -> {
-      return "Did not convert string to URL";
-    });
-    assertEquals(new URI("http://www.test.com").toString(), extraPrimitives.uri.toString(),() -> {
-      return "Did not convert string to URI";
-    });
+    assertEquals("value", extraPrimitives.group.get("key"), "Did not convert table to map");
+    assertEquals(BigDecimal.valueOf(1.2), extraPrimitives.bigDecimal, "Did not convert double to BigDecimal");
+    assertEquals(BigInteger.valueOf(5), extraPrimitives.bigInteger, "Did not convert integer to BigInteger");
+    assertEquals(Short.parseShort("3"), extraPrimitives.aShort, "Did not convert integer to short");
+    assertEquals(Integer.valueOf(7), extraPrimitives.anInteger, "Did not convert integer to Integer");
+    assertEquals(Character.valueOf('u'), extraPrimitives.character, "Did not convert string to Character");
+    assertEquals(new URL("http://www.example.com").toString(), extraPrimitives.url.toString(), "Did not convert string to URL");
+    assertEquals(new URI("http://www.test.com").toString(), extraPrimitives.uri.toString(), "Did not convert string to URI");
     assertThat(extraPrimitives.set, contains("a", "b"));
     assertThat(extraPrimitives.strings, arrayContaining("c", "d"));
-    assertEquals(ElementType.CONSTRUCTOR, extraPrimitives.elementType, () -> "Did not convert string to enum");
+    assertEquals(ElementType.CONSTRUCTOR, extraPrimitives.elementType, "Did not convert string to enum");
   }
 
   @Test
