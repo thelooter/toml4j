@@ -128,8 +128,8 @@ class Results {
   }
   
   final Errors errors = new Errors();
-  private final Set<String> tables = new HashSet<String>();
-  private final Deque<Container> stack = new ArrayDeque<Container>();
+  private final Set<String> tables = new HashSet<>();
+  private final Deque<Container> stack = new ArrayDeque<>();
 
   Results() {
     stack.push(new Container.Table(""));

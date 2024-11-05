@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class Toml {
   
   private static final Gson DEFAULT_GSON = new Gson();
 
-  private Map<String, Object> values = new HashMap<String, Object>();
+  private Map<String, Object> values = new HashMap<>();
   private final Toml defaults;
 
   /**
@@ -55,7 +56,7 @@ public class Toml {
    * @param defaults fallback values used when the requested key or table is not present in the TOML source that has been read.
    */
   public Toml(Toml defaults) {
-    this(defaults, new HashMap<String, Object>());
+    this(defaults, new HashMap<>());
   }
 
   /**
@@ -67,7 +68,7 @@ public class Toml {
    */
   public Toml read(File file) {
     try {
-      return read(new InputStreamReader(new FileInputStream(file), "UTF8"));
+      return read(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -92,31 +93,25 @@ public class Toml {
    * @throws IllegalStateException If file contains invalid TOML
    */
   public Toml read(Reader reader) {
-    BufferedReader bufferedReader = null;
-    try {
-      bufferedReader = new BufferedReader(reader);
+      try (BufferedReader bufferedReader = new BufferedReader(reader)) {
 
-      StringBuilder w = new StringBuilder();
-      String line = bufferedReader.readLine();
-      while (line != null) {
-        w.append(line).append('\n');
-        line = bufferedReader.readLine();
+          StringBuilder w = new StringBuilder();
+          String line = bufferedReader.readLine();
+          while (line != null) {
+              w.append(line).append('\n');
+              line = bufferedReader.readLine();
+          }
+          read(w.toString());
+      } catch (IOException e) {
+          throw new RuntimeException(e);
       }
-      read(w.toString());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } finally {
-      try {
-        bufferedReader.close();
-      } catch (IOException e) {}
-    }
     return this;
   }
 
   /**
    * Populates the current Toml instance with values from otherToml.
    *
-   * @param otherToml 
+   * @param otherToml the toml to use to populate this instance
    * @return this instance
    */
   public Toml read(Toml otherToml) {
@@ -235,7 +230,7 @@ public class Toml {
       return null;
     }
 
-    ArrayList<Toml> tables = new ArrayList<Toml>();
+    ArrayList<Toml> tables = new ArrayList<>();
 
     for (Map<String, Object> table : tableArray) {
       tables.add(new Toml(null, table));
@@ -269,7 +264,7 @@ public class Toml {
   public boolean containsTable(String key) {
     Object object = get(key);
     
-    return object != null && (object instanceof Map);
+    return (object instanceof Map);
   }
 
   /**
@@ -279,7 +274,7 @@ public class Toml {
   public boolean containsTableArray(String key) {
     Object object = get(key);
     
-    return object != null && (object instanceof List);
+    return (object instanceof List);
   }
 
   public boolean isEmpty() {
@@ -322,7 +317,7 @@ public class Toml {
   }
 
   public Map<String, Object> toMap() {
-    HashMap<String, Object> valuesCopy = new HashMap<String, Object>(values);
+    HashMap<String, Object> valuesCopy = new HashMap<>(values);
     
     if (defaults != null) {
       for (Map.Entry<String, Object> entry : defaults.values.entrySet()) {
@@ -339,29 +334,29 @@ public class Toml {
    * @return a {@link Set} of Map.Entry instances. Modifications to the {@link Set} are not reflected in this Toml instance. Entries are immutable, so {@link Map.Entry#setValue(Object)} throws an UnsupportedOperationException.
    */
   public Set<Map.Entry<String,Object>> entrySet() {
-    Set<Map.Entry<String, Object>> entries = new LinkedHashSet<Map.Entry<String, Object>>();
+    Set<Map.Entry<String, Object>> entries = new LinkedHashSet<>();
     
     for (Map.Entry<String, Object> entry : values.entrySet()) {
-      Class<? extends Object> entryClass = entry.getValue().getClass();
+      Class<?> entryClass = entry.getValue().getClass();
       
       if (Map.class.isAssignableFrom(entryClass)) {
-        entries.add(new Toml.Entry(entry.getKey(), getTable(entry.getKey())));
+        entries.add(new Entry(entry.getKey(), getTable(entry.getKey())));
       } else if (List.class.isAssignableFrom(entryClass)) {
         List<?> value = (List<?>) entry.getValue();
         if (!value.isEmpty() && value.get(0) instanceof Map) {
-          entries.add(new Toml.Entry(entry.getKey(), getTables(entry.getKey())));
+          entries.add(new Entry(entry.getKey(), getTables(entry.getKey())));
         } else {
-          entries.add(new Toml.Entry(entry.getKey(), value));
+          entries.add(new Entry(entry.getKey(), value));
         }
       } else {
-        entries.add(new Toml.Entry(entry.getKey(), entry.getValue()));
+        entries.add(new Entry(entry.getKey(), entry.getValue()));
       }
     }
     
     return entries;
   }
 
-  private class Entry implements Map.Entry<String, Object> {
+  private static class Entry implements Map.Entry<String, Object> {
     
     private final String key;
     private final Object value;
@@ -393,7 +388,7 @@ public class Toml {
       return values.get(key);
     }
 
-    Object current = new HashMap<String, Object>(values);
+    Object current = new HashMap<>(values);
     
     Keys.Key[] keys = Keys.split(key);
     

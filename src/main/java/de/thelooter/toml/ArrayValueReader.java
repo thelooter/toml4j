@@ -18,7 +18,7 @@ class ArrayValueReader implements ValueReader {
     AtomicInteger line = context.line;
     int startLine = line.get();
     int startIndex = index.get();
-    List<Object> arrayItems = new ArrayList<Object>();
+    List<Object> arrayItems = new ArrayList<>();
     boolean terminated = false;
     boolean inComment = false;
     Results.Errors errors = new Results.Errors();
@@ -60,7 +60,7 @@ class ArrayValueReader implements ValueReader {
     }
     
     if (!terminated) {
-      errors.unterminated(context.identifier.getName(), s.substring(startIndex, s.length()), startLine);
+      errors.unterminated(context.identifier.getName(), s.substring(startIndex), startLine);
     }
     
     if (errors.hasErrors()) {

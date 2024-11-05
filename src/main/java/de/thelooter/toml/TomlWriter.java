@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -115,12 +116,9 @@ public class TomlWriter {
    * @throws IOException if any file operations fail
    */
   public void write(Object from, File target) throws IOException {
-    OutputStream outputStream = new FileOutputStream(target);
-    try {
-      write(from, outputStream);
-    } finally {
-      outputStream.close();
-    }
+      try (OutputStream outputStream = new FileOutputStream(target)) {
+          write(from, outputStream);
+      }
   }
 
   /**
@@ -131,7 +129,7 @@ public class TomlWriter {
    * @throws IOException if target.write() fails
    */
   public void write(Object from, OutputStream target) throws IOException {
-    OutputStreamWriter writer = new OutputStreamWriter(target, "UTF-8");
+    OutputStreamWriter writer = new OutputStreamWriter(target, StandardCharsets.UTF_8);
     write(from, writer);
     writer.flush();
   }

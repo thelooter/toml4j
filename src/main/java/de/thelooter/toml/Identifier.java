@@ -64,8 +64,8 @@ class Identifier {
     return type == Type.TABLE_ARRAY;
   }
   
-  private static enum Type {
-    KEY, TABLE, TABLE_ARRAY;
+  private enum Type {
+    KEY, TABLE, TABLE_ARRAY
   }
   
   private static String extractName(String raw) {
@@ -112,11 +112,11 @@ class Identifier {
   
   private static boolean isValidTable(String name, Context context) {
     boolean valid = true;
-    
+
     if (!name.endsWith("]")) {
       valid = false;
     }
-    
+
     String trimmed = name.substring(1, name.length() - 1).trim();
     if (trimmed.isEmpty() || trimmed.charAt(0) == '.' || trimmed.endsWith(".")) {
       valid = false;

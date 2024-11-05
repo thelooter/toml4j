@@ -21,7 +21,7 @@ class InlineTableValueReader implements ValueReader {
     boolean inValue = false;
     boolean terminated = false;
     StringBuilder currentKey = new StringBuilder();
-    HashMap<String, Object> results = new HashMap<String, Object>();
+    HashMap<String, Object> results = new HashMap<>();
     Results.Errors errors = new Results.Errors();
     
     for (int i = sharedIndex.incrementAndGet(); sharedIndex.get() < s.length(); i = sharedIndex.incrementAndGet()) {

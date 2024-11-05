@@ -68,24 +68,25 @@ class NumberValueReaderWriter implements ValueReader, ValueWriter {
       }
     }
 
-    if (type.equals("integer")) {
-      return Long.valueOf(sb.toString());
-    } else if (type.equals("float")) {
-      return Double.valueOf(sb.toString());
-    } else if (type.equals("exponent")) {
-      String[] exponentString = sb.toString().split("E");
-      
-      return Double.parseDouble(exponentString[0]) * Math.pow(10, Double.parseDouble(exponentString[1]));
-    } else {
-      Results.Errors errors = new Results.Errors();
-      errors.invalidValue(context.identifier.getName(), sb.toString(), context.line.get());
-      return errors;
-    }
+      switch (type) {
+          case "integer":
+              return Long.valueOf(sb.toString());
+          case "float":
+              return Double.valueOf(sb.toString());
+          case "exponent":
+              String[] exponentString = sb.toString().split("E");
+
+              return Double.parseDouble(exponentString[0]) * Math.pow(10, Double.parseDouble(exponentString[1]));
+          default:
+              Results.Errors errors = new Results.Errors();
+              errors.invalidValue(context.identifier.getName(), sb.toString(), context.line.get());
+              return errors;
+      }
   }
 
   @Override
   public boolean canWrite(Object value) {
-    return Number.class.isInstance(value);
+    return value instanceof Number;
   }
 
   @Override

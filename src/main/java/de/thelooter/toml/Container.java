@@ -13,7 +13,7 @@ abstract class Container {
   abstract boolean isImplicit();
 
   static class Table extends Container {
-    private final Map<String, Object> values = new HashMap<String, Object>();
+    private final Map<String, Object> values = new HashMap<>();
     final String name;
     final boolean implicit;
 
@@ -51,7 +51,6 @@ abstract class Container {
 
     /**
      * This modifies the Table's internal data structure, such that it is no longer usable.
-     *
      * Therefore, this method must only be called when all data has been gathered.
 
      * @return A Map-and-List-based of the TOML data
@@ -75,7 +74,7 @@ abstract class Container {
   }
 
   static class TableArray extends Container {
-    private final List<Container.Table> values = new ArrayList<Container.Table>();
+    private final List<Container.Table> values = new ArrayList<>();
 
     TableArray() {
       values.add(new Container.Table());
@@ -101,7 +100,7 @@ abstract class Container {
     }
 
     List<Map<String, Object>> getValues() {
-      ArrayList<Map<String, Object>> unwrappedValues = new ArrayList<Map<String,Object>>();
+      ArrayList<Map<String, Object>> unwrappedValues = new ArrayList<>();
       for (Container.Table table : values) {
         unwrappedValues.add(table.consume());
       }
