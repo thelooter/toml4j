@@ -1,33 +1,55 @@
 # toml4j Changelog
 
+## 0.8.1 / 2024-11-05
+
+### Updated
+
+* Updated hamcrest to 3.0
+* updated Gson to 2.11.0
+* Updated publish-plugin to 0.30.0
+* Updated junit5 to 5.11.3
+
+## 0.8.0 / 2024-11-04
+
+### Changed
+
+* **BREAKING**: Changed package to de.thelooter
+* **BREAKING**: This project now requires Java 11
+
+### Updated
+
+* Updated Gson to 2.8.9
+* Updated tests to Junit 5
+
 ## 0.7.2 / 2017-08-05
 
-## Updated
+### Updated
 
 * [Update Gson to 2.8.1 and various Maven plugins to latest versions](https://github.com/mwanji/toml4j/pull/45) (thanks to __[DanilaFe](https://github.com/DanilaFe)__)
 
-## Fixed
+### Fixed
 
 * [tomlWriter.write NullPointerException in JDK9](https://github.com/mwanji/toml4j/issues/46) (thanks to __[iwangxiaodong](https://github.com/iwangxiaodong)__)
 * Change build to be able to release a new version entirely from the command line
 
 ## 0.7.1 / 2016-07-27
 
+### Added
 * [Support literal strings in table names](https://github.com/mwanji/toml4j/issues/36) (thanks to __[bruno-medeiros](https://github.com/bruno-medeiros)__)
 
 ## 0.7.0 / 2016-07-12
 
-## Added
+### Added
 
 * Toml#read(Toml) merges two Toml instances (thanks to __[gustavkarlsson](https://github.com/gustavkarlsson)__)
 
 ## 0.6.0 / 2016-06-14
 
-## Added
+### Added
 
 * Toml#toMap() convenience method (thanks to __[andytill](https://github.com/andytill)__ and __[Gyscos](https://github.com/Gyscos)) 
 
-## Fixed
+### Fixed
 
 * Transient fields are not written to TOML files (thanks to __[lare96](https://github.com/lare96)__)
 * Support positive timezone offset in datetime (thanks to __[aloyse](https://github.com/aloyse)__)
