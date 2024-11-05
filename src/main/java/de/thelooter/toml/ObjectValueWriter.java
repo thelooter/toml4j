@@ -44,7 +44,12 @@ class ObjectValueWriter implements ValueWriter {
   }
 
   private static void removeConstantsAndSyntheticFields(Set<Field> fields) {
-      fields.removeIf(field -> (Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) || field.isSynthetic() || Modifier.isTransient(field.getModifiers()));
+    fields.removeIf(field -> {
+      int modifiers = field.getModifiers();
+      return (Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))
+              || field.isSynthetic()
+              || Modifier.isTransient(modifiers);
+    });;
   }
 
   private static Object getFieldValue(Field field, Object o) {
