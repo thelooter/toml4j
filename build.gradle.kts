@@ -19,7 +19,7 @@ dependencies{
     implementation("com.google.code.gson:gson:2.8.9")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
-    testImplementation("org.hamcrest:hamcrest-library:1.3")
+    testImplementation("org.hamcrest:hamcrest-library:3.0")
 }
 
 tasks{
