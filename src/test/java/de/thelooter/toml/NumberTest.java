@@ -8,49 +8,49 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class NumberTest {
   @Test
-  public void should_get_number() throws Exception {
+  public void should_get_number() {
     Toml toml = new Toml().read("b = 1001");
 
     assertEquals(1001, toml.getLong("b").intValue());
   }
 
   @Test
-  public void should_get_negative_number() throws Exception {
+  public void should_get_negative_number() {
     Toml toml = new Toml().read("b = -1001");
 
     assertEquals(-1001, toml.getLong("b").intValue());
   }
   
   @Test
-  public void should_get_number_with_plus_sign() throws Exception {
+  public void should_get_number_with_plus_sign() {
     Toml toml = new Toml().read("a = +1001\nb = 1001");
 
     assertEquals(toml.getLong("b"), toml.getLong("a"));
   }
 
   @Test
-  public void should_get_double() throws Exception {
+  public void should_get_double() {
     Toml toml = new Toml().read("double = 5.25");
 
-    assertEquals(5.25D, toml.getDouble("double").doubleValue(), 0.0);
+    assertEquals(5.25D, toml.getDouble("double"), 0.0);
   }
 
   @Test
-  public void should_get_negative_double() throws Exception {
+  public void should_get_negative_double() {
     Toml toml = new Toml().read("double = -5.25");
 
-    assertEquals(-5.25D, toml.getDouble("double").doubleValue(), 0.0);
+    assertEquals(-5.25D, toml.getDouble("double"), 0.0);
   }
   
   @Test
-  public void should_get_double_with_a_plus_sign() throws Exception {
+  public void should_get_double_with_a_plus_sign() {
     Toml toml = new Toml().read("double = +5.25");
 
-    assertEquals(5.25D, toml.getDouble("double").doubleValue(), 0.0);
+    assertEquals(5.25D, toml.getDouble("double"), 0.0);
   }
   
   @Test
-  public void should_get_exponent() throws Exception {
+  public void should_get_exponent() {
     Toml toml = new Toml().read("lower_case = 1e6\nupper_case = 2E6\nwith_plus = 5e+22\nboth_plus = +5E+22\nnegative = -2E-2\nfractional = 6.626e-34");
 
     assertEquals(1e6, toml.getDouble("lower_case"), 0.0);
@@ -62,28 +62,28 @@ public class NumberTest {
   }
   
   @Test
-  public void should_get_integer_with_underscores() throws Exception {
+  public void should_get_integer_with_underscores() {
     Toml toml = new Toml().read("val = 100_000_000");
     
     assertEquals(100000000L, toml.getLong("val").intValue());
   }
   
   @Test
-  public void should_get_float_with_underscores() throws Exception {
+  public void should_get_float_with_underscores() {
     Toml toml = new Toml().read("val = 100_000.123_456");
     
-    assertEquals(100000.123456, toml.getDouble("val").doubleValue(), 0);
+    assertEquals(100000.123456, toml.getDouble("val"), 0);
   }
   
   @Test
-  public void should_get_exponent_with_underscores() throws Exception {
+  public void should_get_exponent_with_underscores() {
     Toml toml = new Toml().read("val = 1_5e1_00");
     
-    assertEquals(15e100, toml.getDouble("val").doubleValue(), 0.0);
+    assertEquals(15e100, toml.getDouble("val"), 0.0);
   }
   
   @Test
-  public void should_accept_irregular_underscores() throws Exception {
+  public void should_accept_irregular_underscores() {
     Toml toml = new Toml().read("val = 1_2_3_4_5");
     
     assertEquals(12345L, toml.getLong("val").longValue());
@@ -100,7 +100,7 @@ public class NumberTest {
   }
   
   @Test
-  public void should_fail_when_illegal_characters_after_integer() throws Exception {
+  public void should_fail_when_illegal_characters_after_integer() {
     assertThrows(IllegalStateException.class, () -> new Toml().read("number = 314  pi"));
   }
 

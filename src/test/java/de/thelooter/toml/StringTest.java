@@ -2,7 +2,6 @@ package de.thelooter.toml;
 
 import java.io.File;
 
-import de.thelooter.toml.testutils.Utils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StringTest {
 
   @Test
-  public void should_get_string() throws Exception {
+  public void should_get_string() {
     Toml toml = new Toml().read("a = \"a\"");
 
     assertEquals("a", toml.getString("a"));
@@ -29,7 +28,7 @@ public class StringTest {
   }
   
   @Test
-  public void should_get_basic_multiline_string() throws Exception {
+  public void should_get_basic_multiline_string() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/should_get_basic_multiline_string.toml"));
     
     assertEquals(toml.getString("ref"), toml.getString("one_line"));
@@ -37,7 +36,7 @@ public class StringTest {
   }
   
   @Test
-  public void should_get_multiline_string_without_new_lines() throws Exception {
+  public void should_get_multiline_string_without_new_lines() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/should_get_multiline_string_without_new_lines.toml"));
     
     assertEquals(toml.getString("ref"), toml.getString("multi1"));
@@ -45,7 +44,7 @@ public class StringTest {
   }
   
   @Test
-  public void should_get_literal_string() throws Exception {
+  public void should_get_literal_string() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/should_get_literal_string.toml"));
     
     assertEquals("C:\\Users\\nodejs\\templates", toml.getString("winpath"));
@@ -55,7 +54,7 @@ public class StringTest {
   }
   
   @Test
-  public void should_get_multiline_literal_string() throws Exception {
+  public void should_get_multiline_literal_string() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/should_get_multiline_literal_string.toml"));
     
     assertTrue(toml.getString("empty_line").isEmpty());
@@ -71,7 +70,7 @@ public class StringTest {
   }
 
   @Test
-  public void should_support_unicode_characters_in_strings() throws Exception {
+  public void should_support_unicode_characters_in_strings() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/should_support_special_characters_in_strings.toml"));
 
     assertEquals("more or less ±", toml.getString("unicode_key"));

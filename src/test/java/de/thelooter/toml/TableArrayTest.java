@@ -8,13 +8,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.util.List;
 
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
 public class TableArrayTest {
 
   @Test
-  public void should_parse_table_array() throws Exception {
+  public void should_parse_table_array() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/products_table_array.toml"));
 
     List<Toml> products = toml.getTables("products");
@@ -33,7 +32,7 @@ public class TableArrayTest {
   }
   
   @Test
-  public void should_parse_table_array_out_of_order() throws Exception {
+  public void should_parse_table_array_out_of_order() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/should_parse_table_array_out_of_order.toml"));
     
     List<Toml> tables = toml.getTables("product");
@@ -47,7 +46,7 @@ public class TableArrayTest {
   }
 
   @Test
-  public void should_parse_nested_table_arrays() throws Exception {
+  public void should_parse_nested_table_arrays() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/fruit_table_array.toml"));
 
     List<Toml> fruits = toml.getTables("fruit");
@@ -67,14 +66,14 @@ public class TableArrayTest {
   }
 
   @Test
-  public void should_create_array_ancestors_as_tables() throws Exception {
+  public void should_create_array_ancestors_as_tables() {
     Toml toml = new Toml().read("[[a.b.c]]\n id=3");
 
     assertEquals(3, toml.getTable("a").getTable("b").getTables("c").get(0).getLong("id").intValue());
   }
 
   @Test
-  public void should_navigate_array_with_compound_key() throws Exception {
+  public void should_navigate_array_with_compound_key() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/fruit_table_array.toml"));
 
     List<Toml> appleVarieties = toml.getTables("fruit[0].variety");
@@ -88,14 +87,14 @@ public class TableArrayTest {
   }
 
   @Test
-  public void should_return_null_for_missing_table_array() throws Exception {
+  public void should_return_null_for_missing_table_array() {
     Toml toml = new Toml().read("[a]");
     
     assertNull(toml.getTables("b"));
   }
 
   @Test
-  public void should_return_null_for_missing_table_array_with_index() throws Exception {
+  public void should_return_null_for_missing_table_array_with_index() {
     Toml toml = new Toml();
     
     assertNull(toml.getTable("a[0]"));
@@ -103,7 +102,7 @@ public class TableArrayTest {
   }
 
   @Test
-  public void should_return_null_for_index_out_of_bounds() throws Exception {
+  public void should_return_null_for_index_out_of_bounds() {
     Toml toml = new Toml().read("[[a]]\n  c = 1");
     
     assertNull(toml.getTable("a[1]"));

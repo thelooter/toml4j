@@ -17,7 +17,7 @@ public class RealWorldTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void should_parse_example() throws Exception {
+  public void should_parse_example() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/example.toml"));
 
     // printMap(root);
@@ -103,21 +103,21 @@ public class RealWorldTest {
     assertEquals(1000, toml.getLong("integer.underscores.key1").intValue());
     assertEquals(5349221, toml.getLong("integer.underscores.key2").longValue());
     assertEquals(12345, toml.getLong("integer.underscores.key3").intValue());
-    assertEquals(1.0, toml.getDouble("float.fractional.key1").doubleValue(), 0);
-    assertEquals(3.1415, toml.getDouble("float.fractional.key2").doubleValue(), 0);
-    assertEquals(-0.01, toml.getDouble("float.fractional.key3").doubleValue(), 0);
-    assertEquals(5e+22, toml.getDouble("float.exponent.key1").doubleValue(), 0);
+    assertEquals(1.0, toml.getDouble("float.fractional.key1"), 0);
+    assertEquals(3.1415, toml.getDouble("float.fractional.key2"), 0);
+    assertEquals(-0.01, toml.getDouble("float.fractional.key3"), 0);
+    assertEquals(5e+22, toml.getDouble("float.exponent.key1"), 0);
     assertEquals(1e6, toml.getDouble("float.exponent.key2").longValue(), 0);
-    assertEquals(-2E-2, toml.getDouble("float.exponent.key3").doubleValue(), 0);
-    assertEquals(6.626e-34, toml.getDouble("float.both.key").doubleValue(), 0);
+    assertEquals(-2E-2, toml.getDouble("float.exponent.key3"), 0);
+    assertEquals(6.626e-34, toml.getDouble("float.both.key"), 0);
     assertTrue(toml.getBoolean("boolean.True"));
     assertFalse(toml.getBoolean("boolean.False"));
-    assertThat(toml.<Long>getList("array.key1"), contains(1L, 2L, 3L));
-    assertThat(toml.<String>getList("array.key2"), contains("red", "yellow", "green"));
+    assertThat(toml.getList("array.key1"), contains(1L, 2L, 3L));
+    assertThat(toml.getList("array.key2"), contains("red", "yellow", "green"));
     assertEquals(asList(asList(1L, 2L), asList(3L, 4L, 5L)), toml.<List<Long>>getList("array.key3"));
     assertEquals(asList(asList(1L, 2L), asList("a", "b", "c")), toml.<List<Long>>getList("array.key4"));
-    assertThat(toml.<Long>getList("array.key5"), contains(1L, 2L, 3L));
-    assertThat(toml.<Long>getList("array.key6"), contains(1L, 2L));
+    assertThat(toml.getList("array.key5"), contains(1L, 2L, 3L));
+    assertThat(toml.getList("array.key6"), contains(1L, 2L));
     assertEquals("Hammer", toml.getString("products[0].name"));
     assertEquals(738594937, toml.getLong("products[0].sku").intValue());
     assertNotNull(toml.getTable("products[1]"));
@@ -143,7 +143,7 @@ public class RealWorldTest {
   }
 
   @Test
-  public void should_allow_keys_with_same_name_in_different_tables() throws Exception {
+  public void should_allow_keys_with_same_name_in_different_tables() {
     Toml toml = new Toml().read(new File("src/test/resources/de/thelooter/toml/should_allow_keys_with_same_name_in_different_tables.toml"));
 
     assertTrue(toml.getTable("siteInfo.local.sh").getBoolean("enable"));
