@@ -5,7 +5,7 @@ plugins{
     id("maven-publish")
     id("jacoco")
     id("signing")
-    id("com.vanniktech.maven.publish") version "0.29.0"
+    id("com.vanniktech.maven.publish") version "0.30.0"
 }
 group = "de.thelooter"
 description = "Java Library for parsing TOML"
