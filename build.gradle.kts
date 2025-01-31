@@ -16,7 +16,7 @@ repositories{
 }
 
 dependencies{
-    implementation("com.google.code.gson:gson:2.11.0")
+    implementation("com.google.code.gson:gson:2.12.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
     testImplementation("org.hamcrest:hamcrest-library:3.0")
