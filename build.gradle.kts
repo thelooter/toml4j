@@ -1,11 +1,9 @@
-import com.vanniktech.maven.publish.SonatypeHost
-
 plugins{
     id("java-library")
     id("maven-publish")
     id("jacoco")
     id("signing")
-    id("com.vanniktech.maven.publish") version "0.30.0"
+    alias(libs.plugins.vanniktech.maven.publish)
 }
 group = "de.thelooter"
 description = "Java Library for parsing TOML"
@@ -15,27 +13,43 @@ repositories{
     mavenCentral()
 }
 
-dependencies{
-    implementation("com.google.code.gson:gson:2.11.0")
+dependencyLocking {
+    lockAllConfigurations()
+}
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
-    testImplementation("org.hamcrest:hamcrest-library:3.0")
+dependencies{
+    implementation(libs.gson)
+
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testImplementation(libs.hamcrest)
+}
+
+java{
+    // Build/test run on a fixed LTS toolchain (JUnit 6, JaCoCo and Gradle 9 all need 17+),
+    // independent of whichever JDK happens to be on the machine.
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+
+    withSourcesJar()
+}
+
+jacoco{
+    toolVersion = libs.versions.jacoco.get()
 }
 
 tasks{
-    java{
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-
-        withSourcesJar()
+    // Keep the published library compatible with Java 11 while building on a newer JDK.
+    // Only the main source set is constrained; tests build against the running JDK so they
+    // can use modern test frameworks (JUnit 6 requires Java 17+).
+    compileJava{
+        options.release.set(11)
     }
 
     test{
         useJUnitPlatform()
-    }
-
-    jacoco{
-        toolVersion = "0.8.10"
     }
 
     jacocoTestReport{
@@ -53,7 +67,7 @@ tasks{
 
                 addBooleanOption("html5", true)
 
-                links("https://docs.oracle.com/javase/8/docs/api/")
+                links("https://docs.oracle.com/en/java/javase/11/docs/api/")
             }
         }
     }
@@ -118,7 +132,7 @@ mavenPublishing {
     }
 
     signAllPublications()
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
 }
 
 val backupVersion = "1.0.0"
