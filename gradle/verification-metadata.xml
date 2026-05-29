@@ -3,8 +3,8 @@
    <configuration>
       <verify-metadata>true</verify-metadata>
       <verify-signatures>true</verify-signatures>
-      <key-servers enabled="false"/>
       <keyring-format>armored</keyring-format>
+      <key-servers enabled="false"/>
       <trusted-keys>
          <trusted-key id="1BD97A6A154E7810EE0BC832E2F38302C8075E3D" group="org.gradle.toolchains" name="foojay-resolver" version="1.0.0"/>
          <trusted-key id="1D217F8475EEE9F19AB8DD6B793FD5751A0F0780" group="^com[.]squareup($|([.].*))" regex="true"/>
@@ -13,6 +13,7 @@
          <trusted-key id="475F3B8E59E6E63AA78067482C7B12F2A511E325" group="org.slf4j"/>
          <trusted-key id="6F538074CCEBF35F28AF9B066A0975F8B1127B83" group="org.jetbrains.kotlin"/>
          <trusted-key id="7B72C18D9C362314BF8E981B0CAEBC0883C5BB65" group="^com[.]vanniktech($|([.].*))" regex="true"/>
+         <trusted-key id="7B79ADD11F8A779FE90FD3D0893A028475557671" group="org.gradle" name="github-dependency-graph-gradle-plugin"/>
          <trusted-key id="A413F67D71BEEC23ADD0CE0ACB43338E060CF9FA" group="org.jacoco"/>
          <trusted-key id="A5BD02B93E7A40482EB1D66A5F69AD087600B22C" group="org.ow2.asm"/>
          <trusted-key id="C7BE5BCC9FEC15518CFDA882B0F3710FA64900E7" group="com.google.code.gson"/>
