@@ -32,8 +32,6 @@ java{
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
-
-    withSourcesJar()
 }
 
 jacoco{
@@ -125,10 +123,6 @@ mavenPublishing {
             system.set("Github Actions")
             url.set("https://github.com/thelooter/toml4j/actions")
         }
-    }
-
-    configure<JavaPluginExtension> {
-        withSourcesJar()
     }
 
     signAllPublications()
