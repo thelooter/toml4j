@@ -3,7 +3,7 @@ gson = "2.14.0"
 junit = "6.1.0"
 hamcrest = "3.0"
 jacoco = "0.8.14"
-vanniktech-maven-publish = "0.36.0"
+vanniktech-maven-publish = "0.37.0"
 
 [libraries]
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
